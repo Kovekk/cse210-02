@@ -1,4 +1,3 @@
-from card import Card
 class Director:
     """controls the flow of the game."""
 
@@ -7,10 +6,10 @@ class Director:
         self._next_card = next_card
         self._player_guess = ""
         self._score = 300
+        self._continue_game = 'y'
 
     def start_game(self):
-        continue_game = 'y'
-        while continue_game.lower() == 'y':
+        while self._continue_game.lower() == 'y':
             self.do_updates()
             self.get_inputs()
             self.do_outputs()
@@ -21,14 +20,16 @@ class Director:
 
     def do_updates(self):
         self._current_card.set_value(self._next_card.get_value())
-        while self._current_card.get_value().equals(self._next_card.get_value()):
+        while self._current_card.get_value() == self._next_card.get_value():
             self._next_card.randomize_value()
 
     def do_outputs(self):
         print(f"Next card was {self._next_card.get_value()}")
         self.calculate_player_points()
         print(f"Your score is: {self._score}")
-        continue_game = input("Play again? [y/n]")
+        self._continue_game = input("Play again? [y/n]")
+        if self._score < 1:
+            self._continue_game = 'n'
         
 
     def calculate_player_points(self):
